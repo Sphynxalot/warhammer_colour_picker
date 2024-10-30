@@ -1,0 +1,92 @@
+/* style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center; /* Center text */
+    background-color: rgb(163, 204, 224); /* Light background color */
+}
+
+h1 {
+    color: #522222;
+    font-size: 2.5em; /* Larger heading */
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #232222;
+    margin-top: 10px;
+    text-align: center;
+}
+
+label {
+    color: #232222;
+    font-size: 1em;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.selection-section {
+    display: flex;
+    justify-content: space-between; /* Space between selections */
+    width: 80%; /* Wider selection section */
+}
+
+.team-selection, .theme-selection {
+    margin-right: 20px; /* Space between team and theme sections */
+    text-align: center
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select, input {
+    width: 200px; /* Consistent width */
+    margin-bottom: 15px;
+}
+
+button {
+    padding: 10px 20px; /* Larger button */
+    font-size: 1em;
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
+
+img {
+    max-width: 100%; /* Responsive images */
+    height: auto;
+    margin-top: 10px;
+}
+
+#paintImages {
+    display: flex;
+    flex-wrap: wrap; /* Wrap images if needed */
+    justify-content: center; /* Center paint images */
+    margin-top: 15px;
+}
+
+#paintImages img {
+    margin: 5px; /* Space around images */
+    width: 100px; /* Set a width for */
+}
+
+#selectedBloodbowl {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 15px;
+}

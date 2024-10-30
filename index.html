@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Bloodbowl Team and Theme-Based Paints</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Main Title -->
+    <h1>Select a Team and Theme-Based Paints</h1>
+
+    <!-- Flexbox Container for layout -->
+    <div class="container">
+        <div class="selection-section">
+            
+            <div class="team-selection">
+                <label for="bloodbowl">Choose a Bloodbowl Team:</label>
+                <select id="bloodbowl">
+                    <option value="" disabled selected>Select a Team</option>
+            </select>
+            <h2 id="selectedBloodbowl">Team Selected: None</h2>
+            <img id="bloodbowlImage" src="" alt="Team Image" style="display:none; width: 200px;">
+        </div>
+
+        <div class="theme-selection">
+            <label for="theme">Enter a theme:</label>
+            <input type="text" id="themeInput" placeholder="e.g., Halloween, Colourful">
+            <button id="randomiseButton">Randomise Paints</button>
+            <h2 id="randomPaints">Random Paints: None</h2>
+            <div id="paintImages"></div>
+        </div>
+    </div>
+</div>         
+                
+
+    <script>
+        // Fetch teams from the PostgreSQL database and populate the select dropdown
+        fetch('http://localhost:3000/api/bloodbowl')
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('bloodbowl');
+                data.forEach(bloodbowl => {
+                    const option = document.createElement('option');
+                    option.value = bloodbowl.image_url;
+                    option.text = bloodbowl.name;
+                    select.add(option);
+                });
+            });
+        
+        // Event listener to display the selected Bloodbowl team image
+        document.getElementById('bloodbowl').addEventListener('change', function() {
+            const selectedBloodbowlName = this.options[this.selectedIndex].text;
+            const imageUrl = this.value; // The image URL stored in the select value
+            
+            const teamImage = document.getElementById('bloodbowlImage');
+            teamImage.src = imageUrl;
+            teamImage.style.display = 'block';
+
+            const selectedBloodbowlH2 = document.getElementById('selectedBloodbowl');
+            selectedBloodbowlH2.innerText = `Selected Team: ${selectedBloodbowlName}`;
+        });
+            
+        // Button functionality
+        document.getElementById('randomiseButton').addEventListener('click', () => {
+            const theme = document.getElementById('themeInput').value.trim().toLowerCase();
+            
+            // If no theme inputted, fallback to General
+            const selectedTheme = theme.length > 0 ? theme : 'general';
+
+            // Fetch random paints based on the theme
+            fetch(`http://localhost:3000/api/random-paints/${selectedTheme}`)
+                .then(response => {
+                    if (!response.ok){
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(randomPaints => {
+                    // Display paints and images
+                    const paintsList = randomPaints.map(paint => `Colour: ${paint.colour}`).join(', ');
+                    document.getElementById('randomPaints').innerText = `Random Paints: ${paintsList}`;
+            
+                    // Display paint images from their web URLs
+                    const paintImagesDiv = document.getElementById('paintImages');
+                    paintImagesDiv.innerHTML = ''; // Clear previous images
+                    randomPaints.forEach(paint => {
+                        const img = document.createElement('img');
+                        img.src = paint.image_url; // Assuming image_url is being sent back from your API
+                        img.alt = paint.colour; // Set alt text for accessibility
+                        img.style.width = '100px'; // Adjust width as needed
+                        paintImagesDiv.appendChild(img);
+                    });
+                    
+                })
+                    .catch(error => {
+                        console.error('Error fetching paints:', error);
+                        document.getElementById('randomPaints').innerText = 'Error fetching paints.';
+                });
+            });
+    </script>
+</body>    
+</html>
